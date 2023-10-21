@@ -1,18 +1,4 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-
+import { useEffect } from "react";
 import Globe from "react-globe.gl";
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -57,8 +43,37 @@ function classNames(...classes) {
 }
 
 export default function MainPage() {
+  const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+  const latitude = coordinates.lat;  // Replace with your latitude
+  const longitude = coordinates.lng; // Replace with your longitude
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [country, setCountry] = useState(null);
 
+  const handleGlobeClick = ({ lat, lng }) => {
+    // Update the state with the clicked coordinates
+    setCoordinates({ lat, lng });
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.results.length > 0) {
+          const country = data.results[0].components.country;
+          setCountry(country); // Store the country in state
+        } else {
+          console.error('Geocoding failed.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    
+  };
+
+
+    
+
+   
   return (
     <>
       {/*
@@ -356,13 +371,21 @@ export default function MainPage() {
           height={600}
           backgroundColor="white"
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          onGlobeClick={handleGlobeClick}
         />
       </div>
     </div>
   </div>
   <div className="w-1/3 px-4 sm:px-6 lg:px-8 py-10">
     <div className="overflow-hidden rounded-lg bg-gray-200 shadow">
-      <div className="px-4 py-5 sm:p-6">{/* Content goes here */}</div>
+      <div className="px-4 py-5 sm:p-6">
+      <h3>Clicked Coordinates</h3>
+        <p>Latitude: {coordinates.lat}</p>
+        <p>Longitude: {coordinates.lng}</p>
+
+        <h3>Country:</h3>
+      <p>{country}</p>
+      </div>
     </div>
 
 
