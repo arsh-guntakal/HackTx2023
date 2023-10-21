@@ -28,6 +28,7 @@ const navigation = [
   { name: "Sports", href: "#", icon: ChartPieIcon, current: false },
   { name: "Technology", href: "#", icon: ChartPieIcon, current: false },
 ];
+
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
@@ -43,6 +44,13 @@ function classNames(...classes) {
 }
 
 export default function MainPage() {
+
+    const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
+const handleRadioChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  
   const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const latitude = coordinates.lat;  // Replace with your latitude
@@ -274,13 +282,15 @@ export default function MainPage() {
                           className="relative flex items-start"
                         >
                           <div className="flex h-6 items-center">
-                            <input
-                              id={item.name}
-                              aria-describedby={`${item.name}-description`}
-                              name="plan"
-                              type="radio"
-                              defaultChecked={item.name === "small"}
-                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          <input
+                            id={item.name}
+                            aria-describedby={`${item.name}-description`}
+                            name="plan"
+                            type="radio"
+                            value={item.name}
+                            checked={selectedOption === item.name}
+                            onChange={handleRadioChange}
+                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="ml-3 text-sm leading-6 flex items-center">
@@ -385,6 +395,9 @@ export default function MainPage() {
 
         <h3>Country:</h3>
       <p>{country}</p>
+
+      <h2>Selected Option:</h2>
+        <p>{selectedOption}</p>
       </div>
     </div>
 
