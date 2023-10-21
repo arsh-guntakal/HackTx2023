@@ -50,7 +50,7 @@ const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  
+
   const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const latitude = coordinates.lat;  // Replace with your latitude
@@ -380,7 +380,7 @@ const handleRadioChange = (event) => {
           width={800}
           height={600}
           backgroundColor="white"
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           onGlobeClick={handleGlobeClick}
         />
       </div>
