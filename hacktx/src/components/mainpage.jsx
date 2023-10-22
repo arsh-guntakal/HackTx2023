@@ -127,13 +127,32 @@ export default function MainPage() {
       const response = fetch(url);
       let jsonData = (await response).json();
       Object.keys(jsonData.then(result => {
-        console.log(result.articles);
-        setSummary(JSON.stringify(result.articles));
+        // console.log(result.articles);
+        const articles = result.articles;
+
+        const articleSummaries = [];
+        // Loop through the articles and extract the summaries
+        articles.forEach(article => {
+          // Check if the 'description' property is not null
+          if (article.url !== null) {
+            articleSummaries.push(article.url + "\n\n\n");
+          }
+        });
+
+        // Now 'articleSummaries' contains the summaries of the articles
+        console.log(articleSummaries);
+        // setSummary(JSON.stringify(result.articles));
+        let summaryToDisplay = "";
+        for (let i = 0; i < articleSummaries.length; i++) {
+          summaryToDisplay += ` ` + articleSummaries[i] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
+        }
+        setSummary(summaryToDisplay);
+
       }).catch(error => {
         setSummary("ERROR SETTING NEWS");
       }));
       
-
+      
       /*
       const articles = response.data.articles.slice(0, 10); // Get the top 10 articles
       for (let i = 0; i < articles.length; i++) {
