@@ -134,8 +134,9 @@ export default function MainPage() {
         // Loop through the articles and extract the summaries
         articles.forEach(article => {
           // Check if the 'description' property is not null
-          if (article.url !== null) {
-            articleSummaries.push(article.url + "\n\n\n");
+          if (article.description !== null) {
+            // articleSummaries.push(JSON.stringify(article) + "\n\n\n");
+            articleSummaries.push("description: " + article.description + "content: " + article.content +  "\n\n\n");
           }
         });
 
@@ -144,7 +145,7 @@ export default function MainPage() {
         // setSummary(JSON.stringify(result.articles));
         let summaryToDisplay = "";
         for (let i = 0; i < articleSummaries.length; i++) {
-          summaryToDisplay += ` ` + articleSummaries[i] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
+          summaryToDisplay += `` + articleSummaries[i] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
         }
         setSummary(summaryToDisplay);
 
