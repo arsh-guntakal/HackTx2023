@@ -28,6 +28,62 @@ const navigation = [
   { name: "Sports", href: "#", icon: ChartPieIcon, current: false },
   { name: "Technology", href: "#", icon: ChartPieIcon, current: false },
 ];
+const countryCodes = {
+  'United Arab Emirates': 'ae',
+  'Argentina': 'ar',
+  'Austria': 'at',
+  'Australia': 'au',
+  'Belgium': 'be',
+  'Bulgaria': 'bg',
+  'Brazil': 'br',
+  'Canada': 'ca',
+  'Switzerland': 'ch',
+  'China': 'cn',
+  'Colombia': 'co',
+  'Cuba': 'cu',
+  'Czech Republic': 'cz',
+  'Germany': 'de',
+  'Egypt': 'eg',
+  'France': 'fr',
+  'United Kingdom': 'gb',
+  'Greece': 'gr',
+  'Hong Kong': 'hk',
+  'Hungary': 'hu',
+  'Indonesia': 'id',
+  'Ireland': 'ie',
+  'Israel': 'il',
+  'India': 'in',
+  'Italy': 'it',
+  'Japan': 'jp',
+  'South Korea': 'kr',
+  'Lithuania': 'lt',
+  'Latvia': 'lv',
+  'Morocco': 'ma',
+  'Mexico': 'mx',
+  'Malaysia': 'my',
+  'Nigeria': 'ng',
+  'Netherlands': 'nl',
+  'Norway': 'no',
+  'New Zealand': 'nz',
+  'Philippines': 'ph',
+  'Poland': 'pl',
+  'Portugal': 'pt',
+  'Romania': 'ro',
+  'Serbia': 'rs',
+  'Russia': 'ru',
+  'Saudi Arabia': 'sa',
+  'Sweden': 'se',
+  'Singapore': 'sg',
+  'Slovenia': 'si',
+  'Slovakia': 'sk',
+  'Thailand': 'th',
+  'Turkey': 'tr',
+  'Taiwan': 'tw',
+  'Ukraine': 'ua',
+  'United States': 'us',
+  'Venezuela': 've',
+  'South Africa': 'za'
+};
 
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
@@ -45,8 +101,8 @@ function classNames(...classes) {
 
 export default function MainPage() {
 
-    const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
-const handleRadioChange = (event) => {
+  const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
+  const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
@@ -57,6 +113,46 @@ const handleRadioChange = (event) => {
   const longitude = coordinates.lng; // Replace with your longitude
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [country, setCountry] = useState(null);
+  const [summary, setSummary] = useState(null);
+
+  function getNewsArticleSummary(country, category) {
+    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+  }
+  async function fetchAndSummarizeNews(country, category) {
+    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+    const countryCode = countryCodes[country]
+    const categoryParam = category ?  '&category=${category}' : '';
+    const url = `https://newsapi.org/v2/top-headlines?country=${countryCode}${categoryParam}&apiKey=${api_key}`;  
+
+    try {
+      const response = fetch(url);
+      let jsonData = (await response).json();
+      Object.keys(jsonData.then(result => {
+        console.log(result.articles);
+        setSummary(JSON.stringify(result.articles));
+      }).catch(error => {
+        // oops
+      }));
+      
+
+      /*
+      const articles = response.data.articles.slice(0, 10); // Get the top 10 articles
+      for (let i = 0; i < articles.length; i++) {
+          const article = articles[i];
+          console.log(`News ${i + 1}: ${article.title}`);
+          console.log(`Source: ${article.source.name}`);
+          console.log(`Description: ${article.description}`);
+          console.log(`URL: ${article.url}`);
+          console.log('\n');
+      }
+      */
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
+  }
+
 
   const handleGlobeClick = ({ lat, lng }) => {
     // Update the state with the clicked coordinates
@@ -68,6 +164,7 @@ const handleRadioChange = (event) => {
         if (data.results.length > 0) {
           const country = data.results[0].components.country;
           setCountry(country); // Store the country in state
+          fetchAndSummarizeNews(country, navigation.name);
         } else {
           console.error('Geocoding failed.');
         }
@@ -398,6 +495,10 @@ const handleRadioChange = (event) => {
 
       <h2>Selected Option:</h2>
         <p>{selectedOption}</p>
+      </div>
+      <div>
+        <h2>Summary:</h2>
+        <p>{summary}</p>
       </div>
     </div>
 
