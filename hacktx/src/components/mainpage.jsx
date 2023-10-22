@@ -27,7 +27,7 @@ import {
 import OpenAI from "openai";
 
 
-// start chatgpt functions
+// start chatgpt functions sup
 
 const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true});
 
