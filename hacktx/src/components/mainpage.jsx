@@ -12,7 +12,12 @@ import {
   FolderIcon,
   HomeIcon,
   UsersIcon,
-  XMarkIcon,
+  XMarkIcon,BriefcaseIcon, 
+  MicrophoneIcon,
+  HeartIcon,
+  AcademicCapIcon,  
+
+
 } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
@@ -21,22 +26,19 @@ import {
 
 import OpenAI from "openai";
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 // start chatgpt functions
 
-const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true });
+const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true});
 
-async function queryGPT(query) {
+async function queryGPT(query){
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [{ "role": "system", "content": "You are a helpful assistant." },
-    { "role": "user", "content": query }],
+      model: "gpt-3.5-turbo",
+      messages: [{"role": "system", "content": "You are a helpful assistant."},        
+      {"role": "user", "content": query}],
   });
-
-  //console.log(response)
+  
+   //console.log(response)
   const message = response.choices[0].message.content
   const finishReason = response.choices[0].finish_reason
   return message
@@ -45,31 +47,31 @@ async function queryGPT(query) {
 
 // Dummy function to simulate summarizing an article
 function summarizeArticle(text) {
-  let query = "Can you summarize the key points of this article in 50 to 75 words?"
-  query += text
-  queryGPT(query).then(result => {
-    console.log(result)
-    return result
-  });
+let query = "Can you summarize the key points of this article in 50 to 75 words?"
+query += text
+queryGPT(query).then(result =>{
+  console.log(result)
+  return result
+});
 }
 
 // Function to list summarized articles
 function listSummarizedArticles(articles) {
-  articles.forEach((summary, index) => {
-    console.log(`Article ${index + 1}: ${summary}\n`);
-  });
+articles.forEach((summary, index) => {
+  console.log(`Article ${index + 1}: ${summary}\n`);
+});
 }
 
 // end chatgpt functions
 
 const navigation = [
-  { name: "Business", href: "#", icon: HomeIcon, current: true },
-  { name: "Entertainment", href: "#", icon: UsersIcon, current: false },
+  { name: "Business", href: "#", icon: BriefcaseIcon, current: true },
+  { name: "Entertainment", href: "#", icon: MicrophoneIcon, current: false },
   { name: "General", href: "#", icon: FolderIcon, current: false },
-  { name: "Health", href: "#", icon: CalendarIcon, current: false },
-  { name: "Science", href: "#", icon: DocumentDuplicateIcon, current: false },
+  { name: "Health", href: "#", icon: HeartIcon, current: false },
+  { name: "Science", href: "#", icon: AcademicCapIcon, current: false },
   { name: "Sports", href: "#", icon: ChartPieIcon, current: false },
-  { name: "Technology", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Technology", href: "#", icon: AcademicCapIcon, current: false },
 ];
 const countryCodes = {
   'United Arab Emirates': 'ae',
@@ -144,9 +146,7 @@ function classNames(...classes) {
 
 export default function MainPage() {
 
-  const [summaries, setSummaries] = useState([]); // State to store the list of summaries
-
-
+  
 
 
   const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
@@ -157,10 +157,6 @@ export default function MainPage() {
   const [country, setCountry] = useState(null);
   const [summary, setSummary] = useState(null);
 
-  const addSummaryToSummaries = (newSummary) => {
-    setSummaries([...summaries, newSummary]);
-  };
-
   function getNewsArticleSummary(country, category) {
     const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
@@ -169,8 +165,8 @@ export default function MainPage() {
     const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
     const countryCode = countryCodes[country]
-    const categoryParam = category ? `&category=${category}` : '';
-    const url = `https://newsapi.org/v2/top-headlines?country=${countryCode}${categoryParam}&apiKey=${api_key}`;
+    const categoryParam = category ?  `&category=${category}` : '';
+    const url = `https://newsapi.org/v2/top-headlines?country=${countryCode}${categoryParam}&apiKey=${api_key}`;  
 
     try {
       const response = fetch(url);
@@ -185,24 +181,21 @@ export default function MainPage() {
           // Check if the 'description' property is not null
           if (article.description !== null) {
             // articleSummaries.push(JSON.stringify(article) + "\n\n\n");
-            articleSummaries.push("description: " + article.description + "content: " + article.content + "\n\n\n");
+            articleSummaries.push("description: " + article.description + "content: " + article.content +  "\n\n\n");
           }
         });
         let summaryToDisplay = ''
-        // for (let i = 0; i < articleSummaries.length; i++) {
-        let query = "I have n different summaries. They all end with 'chars]'. I want you to improve the phrasing and clarity on these summaries. Fix any trailing off sentences, and ignore any summaries that are blank. Concatenate the description and content of each summary into one cohesive summary. If you are unable to provide a summary for any other reason, skip it. Separate your response with spaces."
-        console.log(`article summaries: ${articleSummaries}`);
-        query += `${articleSummaries}`
-        queryGPT(query).then(result => {
-        console.log(result)
-        // articleSummaries[i] = result + "💀💀💀💀💀💀💀💀💀💀💀";
-        // summaryToDisplay += articleSummaries[i];
-        summaryToDisplay += articleSummaries
-        setSummary(summaryToDisplay);
-        addSummaryToSummaries(result);
-        })
+        for (let i = 0; i < articleSummaries.length; i++) {
+          let query = "Can you improve the phrasing and clarity on these summaries? Fix any trailing off sentences, and ignore any summaries that are blank. Concatenate the description and content into one cohesive summary. If you are unable to provide a summary for any other reason, kindly shut the fuck up."
+          query += `${articleSummaries[i]}`
+          queryGPT(query).then(result =>{
+            console.log(result)
+            articleSummaries[i] = result + "😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂";
+            summaryToDisplay += articleSummaries[i];
+            setSummary(summaryToDisplay) ;
+          })
           //scrapeAndSummarizeArticles(articleURLs)
-        // }
+        }
 
         // Now 'articleSummaries' contains the summaries of the articles
         // console.log(articleSummaries);
@@ -216,8 +209,8 @@ export default function MainPage() {
       }).catch(error => {
         setSummary("ERROR SETTING NEWS");
       }));
-
-
+      
+      
       /*
       const articles = response.data.articles.slice(0, 10); // Get the top 10 articles
       for (let i = 0; i < articles.length; i++) {
@@ -230,7 +223,7 @@ export default function MainPage() {
       }
       */
     } catch (error) {
-      console.error('Error fetching news:', error);
+        console.error('Error fetching news:', error);
     }
   }
 
@@ -259,9 +252,13 @@ export default function MainPage() {
       .catch(error => {
         console.error('Error:', error);
       });
+    
   };
 
 
+    
+
+   
   return (
     <>
       {/*
@@ -462,15 +459,15 @@ export default function MainPage() {
                           className="relative flex items-start"
                         >
                           <div className="flex h-6 items-center">
-                            <input
-                              id={item.name}
-                              aria-describedby={`${item.name}-description`}
-                              name="plan"
-                              type="radio"
-                              value={item.name}
-                              checked={selectedOption === item.name}
-                              onChange={handleRadioChange}
-                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          <input
+                            id={item.name}
+                            aria-describedby={`${item.name}-description`}
+                            name="plan"
+                            type="radio"
+                            value={item.name}
+                            checked={selectedOption === item.name}
+                            onChange={handleRadioChange}
+                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="ml-3 text-sm leading-6 flex items-center">
@@ -547,51 +544,47 @@ export default function MainPage() {
                   name="search"
                 />
               </form>
-
+              
             </div>
           </div>
 
           <main className="py-2">
-            <div className="flex justify-between">
-              <div className="w-2/3 px-4 sm:px-6 lg:px-8 py-10">
-                <div className="overflow-hidden rounded-lg bg-white shadow">
-                  <div className="sm:p-6">
-                    <Globe
-                      width={800}
-                      height={600}
-                      backgroundColor="white"
-                      globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-                      onGlobeClick={handleGlobeClick}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/3 px-4 sm:px-6 lg:px-8 py-10">
-                <div className="overflow-hidden rounded-lg bg-gray-200 shadow">
-                  <div className="px-4 py-5 sm:p-6">
-                    <h3>Clicked Coordinates</h3>
-                    <p>Latitude: {coordinates.lat}</p>
-                    <p>Longitude: {coordinates.lng}</p>
+          <div className="flex justify-between">
+  <div className="w-2/3 px-4 sm:px-6 lg:px-8 py-10">
+    <div className="overflow-hidden rounded-lg bg-white shadow">
+      <div className="sm:p-6">
+        <Globe
+          width={800}
+          height={600}
+          backgroundColor="white"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          onGlobeClick={handleGlobeClick}
+        />
+      </div>
+    </div>
+  </div>
+  <div className="w-1/3 px-4 sm:px-6 lg:px-8 py-10">
+    <div className="overflow-hidden rounded-lg bg-gray-200 shadow">
+      <div className="px-4 py-5 sm:p-6">
+      <h3>Clicked Coordinates</h3>
+        <p>Latitude: {coordinates.lat}</p>
+        <p>Longitude: {coordinates.lng}</p>
 
-                    <h3>Country:</h3>
-                    <p>{country}</p>
+        <h3>Country:</h3>
+        <p className="font-bold text-4xl">{country}</p>
 
-                    <h2>Selected Option:</h2>
-                    <p>{selectedOption}</p>
+        <h2>Selected Option:</h2>
+        <p className="font-semibold text-2xl">{selectedOption}</p>
 
-                    <h2>Summary:</h2>
-                    <ul>
-                      {summaries.map((summary, index) => (
-                        <li key={index}>{summary}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                </div>
+        <h2>Summary:</h2>
+        <p>{summary}</p>
+      </div>
+      
+    </div>
 
 
-              </div>
-            </div>
+  </div>
+</div>
 
           </main>
         </div>
