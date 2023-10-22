@@ -19,6 +19,46 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 
+import OpenAI from "openai";
+
+
+// start chatgpt functions
+
+const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true});
+
+async function queryGPT(query){
+  const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{"role": "system", "content": "You are a helpful assistant."},        
+      {"role": "user", "content": query}],
+  });
+  
+   //console.log(response)
+  const message = response.choices[0].message.content
+  const finishReason = response.choices[0].finish_reason
+  return message
+}
+
+
+// Dummy function to simulate summarizing an article
+function summarizeArticle(text) {
+let query = "Can you summarize the key points of this article in 50 to 75 words?"
+query += text
+queryGPT(query).then(result =>{
+  console.log(result)
+  return result
+});
+}
+
+// Function to list summarized articles
+function listSummarizedArticles(articles) {
+articles.forEach((summary, index) => {
+  console.log(`Article ${index + 1}: ${summary}\n`);
+});
+}
+
+// end chatgpt functions
+
 const navigation = [
   { name: "Business", href: "#", icon: HomeIcon, current: true },
   { name: "Entertainment", href: "#", icon: UsersIcon, current: false },
@@ -139,15 +179,27 @@ export default function MainPage() {
             articleSummaries.push("description: " + article.description + "content: " + article.content +  "\n\n\n");
           }
         });
+        let summaryToDisplay = ''
+        for (let i = 0; i < articleSummaries.length; i++) {
+          let query = "Can you improve the phrasing and clarity on these summaries? Fix any trailing off sentences, and ignore any summaries that are blank. Concatenate the description and content into one cohesive summary. If you are unable to provide a summary for any other reason, kindly shut the fuck up."
+          query += `${articleSummaries[i]}`
+          queryGPT(query).then(result =>{
+            console.log(result)
+            articleSummaries[i] = result + "💀💀💀💀💀💀💀💀💀💀💀";
+            summaryToDisplay += articleSummaries[i];
+            setSummary(summaryToDisplay) ;
+          })
+          //scrapeAndSummarizeArticles(articleURLs)
+        }
 
         // Now 'articleSummaries' contains the summaries of the articles
-        console.log(articleSummaries);
+        // console.log(articleSummaries);
         // setSummary(JSON.stringify(result.articles));
-        let summaryToDisplay = "";
-        for (let i = 0; i < articleSummaries.length; i++) {
-          summaryToDisplay += `` + articleSummaries[i] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
-        }
-        setSummary(summaryToDisplay);
+        // let summaryToDisplay = "";
+        // for (let i = 0; i < articleSummaries.length; i++) {
+        //   summaryToDisplay += `` + articleSummaries[i] + "";
+        // }
+        // setSummary(summaryToDisplay);
 
       }).catch(error => {
         setSummary("ERROR SETTING NEWS");
@@ -514,15 +566,15 @@ export default function MainPage() {
         <p>Longitude: {coordinates.lng}</p>
 
         <h3>Country:</h3>
-      <p>{country}</p>
+        <p>{country}</p>
 
-      <h2>Selected Option:</h2>
+        <h2>Selected Option:</h2>
         <p>{selectedOption}</p>
-      </div>
-      <div>
+
         <h2>Summary:</h2>
         <p>{summary}</p>
       </div>
+      
     </div>
 
 
