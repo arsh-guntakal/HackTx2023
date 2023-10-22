@@ -101,10 +101,7 @@ function classNames(...classes) {
 
 export default function MainPage() {
 
-  const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
-  const handleRadioChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
+  
 
 
   const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
@@ -123,7 +120,7 @@ export default function MainPage() {
     const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
     const countryCode = countryCodes[country]
-    const categoryParam = category ?  '&category=${category}' : '';
+    const categoryParam = category ?  `&category=${category}` : '';
     const url = `https://newsapi.org/v2/top-headlines?country=${countryCode}${categoryParam}&apiKey=${api_key}`;  
 
     try {
@@ -133,7 +130,7 @@ export default function MainPage() {
         console.log(result.articles);
         setSummary(JSON.stringify(result.articles));
       }).catch(error => {
-        // oops
+        setSummary("ERROR SETTING NEWS");
       }));
       
 
@@ -153,6 +150,12 @@ export default function MainPage() {
     }
   }
 
+  const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
+  const handleRadioChange = (event) => {
+    setSelectedOption(event.target.value);
+    console.log(event.target.value);
+    fetchAndSummarizeNews(country, event.target.value);
+  };
 
   const handleGlobeClick = ({ lat, lng }) => {
     // Update the state with the clicked coordinates
@@ -422,7 +425,7 @@ export default function MainPage() {
                       className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
                       aria-hidden="true"
                     />
-                    Settings
+                    Reset
                   </a>
                 </li>
               </ul>
