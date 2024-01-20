@@ -1,0 +1,16 @@
+{
+  "name": "hacktx2023",
+  "version": "1.0.0",
+  "description": "summarize top 10 articles from news api using chatgpt",
+  "main": "helloworld.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arsh Guntakal",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^3.3.2"
+  }
+}
