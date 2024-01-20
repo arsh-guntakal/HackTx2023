@@ -29,7 +29,7 @@ import OpenAI from "openai";
 
 // start chatgpt functions sup
 
-const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true});
+const openai = new OpenAI({ apiKey: process.env.REACT_APP_OPEN_AI_API_KEY, dangerouslyAllowBrowser: true});
 
 async function queryGPT(query){
   const response = await openai.chat.completions.create({
