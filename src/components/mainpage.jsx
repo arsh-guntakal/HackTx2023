@@ -12,22 +12,123 @@ import {
   FolderIcon,
   HomeIcon,
   UsersIcon,
-  XMarkIcon,
+  XMarkIcon,BriefcaseIcon, 
+  MicrophoneIcon,
+  HeartIcon,
+  AcademicCapIcon,  
+
+
 } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 
+import OpenAI from "openai";
+
+
+// start chatgpt functions sup
+
+const openai = new OpenAI({ apiKey: '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', dangerouslyAllowBrowser: true});
+
+async function queryGPT(query){
+  const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{"role": "system", "content": "You are a helpful assistant."},        
+      {"role": "user", "content": query}],
+  });
+  
+   //console.log(response)
+  const message = response.choices[0].message.content
+  const finishReason = response.choices[0].finish_reason
+  return message
+}
+
+
+// Dummy function to simulate summarizing an article
+function summarizeArticle(text) {
+let query = "Can you summarize the key points of this article in 50 to 75 words?"
+query += text
+queryGPT(query).then(result =>{
+  console.log(result)
+  return result
+});
+}
+
+// Function to list summarized articles
+function listSummarizedArticles(articles) {
+articles.forEach((summary, index) => {
+  console.log(`Article ${index + 1}: ${summary}\n`);
+});
+}
+
+// end chatgpt functions
+
 const navigation = [
-  { name: "Business", href: "#", icon: HomeIcon, current: true },
-  { name: "Entertainment", href: "#", icon: UsersIcon, current: false },
+  { name: "Business", href: "#", icon: BriefcaseIcon, current: true },
+  { name: "Entertainment", href: "#", icon: MicrophoneIcon, current: false },
   { name: "General", href: "#", icon: FolderIcon, current: false },
-  { name: "Health", href: "#", icon: CalendarIcon, current: false },
-  { name: "Science", href: "#", icon: DocumentDuplicateIcon, current: false },
+  { name: "Health", href: "#", icon: HeartIcon, current: false },
+  { name: "Science", href: "#", icon: AcademicCapIcon, current: false },
   { name: "Sports", href: "#", icon: ChartPieIcon, current: false },
-  { name: "Technology", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Technology", href: "#", icon: AcademicCapIcon, current: false },
 ];
+const countryCodes = {
+  'United Arab Emirates': 'ae',
+  'Argentina': 'ar',
+  'Austria': 'at',
+  'Australia': 'au',
+  'Belgium': 'be',
+  'Bulgaria': 'bg',
+  'Brazil': 'br',
+  'Canada': 'ca',
+  'Switzerland': 'ch',
+  'China': 'cn',
+  'Colombia': 'co',
+  'Cuba': 'cu',
+  'Czech Republic': 'cz',
+  'Germany': 'de',
+  'Egypt': 'eg',
+  'France': 'fr',
+  'United Kingdom': 'gb',
+  'Greece': 'gr',
+  'Hong Kong': 'hk',
+  'Hungary': 'hu',
+  'Indonesia': 'id',
+  'Ireland': 'ie',
+  'Israel': 'il',
+  'India': 'in',
+  'Italy': 'it',
+  'Japan': 'jp',
+  'South Korea': 'kr',
+  'Lithuania': 'lt',
+  'Latvia': 'lv',
+  'Morocco': 'ma',
+  'Mexico': 'mx',
+  'Malaysia': 'my',
+  'Nigeria': 'ng',
+  'Netherlands': 'nl',
+  'Norway': 'no',
+  'New Zealand': 'nz',
+  'Philippines': 'ph',
+  'Poland': 'pl',
+  'Portugal': 'pt',
+  'Romania': 'ro',
+  'Serbia': 'rs',
+  'Russia': 'ru',
+  'Saudi Arabia': 'sa',
+  'Sweden': 'se',
+  'Singapore': 'sg',
+  'Slovenia': 'si',
+  'Slovakia': 'sk',
+  'Thailand': 'th',
+  'Turkey': 'tr',
+  'Taiwan': 'tw',
+  'Ukraine': 'ua',
+  'United States': 'us',
+  'Venezuela': 've',
+  'South Africa': 'za'
+};
 
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
@@ -45,10 +146,7 @@ function classNames(...classes) {
 
 export default function MainPage() {
 
-    const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
-const handleRadioChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
+  
 
 
   const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
@@ -57,6 +155,84 @@ const handleRadioChange = (event) => {
   const longitude = coordinates.lng; // Replace with your longitude
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [country, setCountry] = useState(null);
+  const [summary, setSummary] = useState(null);
+
+  function getNewsArticleSummary(country, category) {
+    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+  }
+  async function fetchAndSummarizeNews(country, category) {
+    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+    const countryCode = countryCodes[country]
+    const categoryParam = category ?  `&category=${category}` : '';
+    const url = `https://newsapi.org/v2/top-headlines?country=${countryCode}${categoryParam}&apiKey=${api_key}`;  
+
+    try {
+      const response = fetch(url);
+      let jsonData = (await response).json();
+      Object.keys(jsonData.then(result => {
+        // console.log(result.articles);
+        const articles = result.articles;
+
+        const articleSummaries = [];
+        // Loop through the articles and extract the summaries
+        articles.forEach(article => {
+          // Check if the 'description' property is not null
+          if (article.description !== null) {
+            // articleSummaries.push(JSON.stringify(article) + "\n\n\n");
+            articleSummaries.push("description: " + article.description + "content: " + article.content +  "\n\n\n");
+          }
+        });
+        let summaryToDisplay = ''
+        for (let i = 0; i < articleSummaries.length; i++) {
+          let query = "Can you improve the phrasing and clarity on these summaries? Fix any trailing off sentences, and ignore any summaries that are blank. Concatenate the description and content into one cohesive summary. If you are unable to provide a summary for any other reason, kindly shut the fuck up."
+          query += `${articleSummaries[i]}`
+          queryGPT(query).then(result =>{
+            console.log(result)
+            articleSummaries[i] = result + "😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂";
+            summaryToDisplay += articleSummaries[i];
+            setSummary(summaryToDisplay) ;
+          })
+          //scrapeAndSummarizeArticles(articleURLs)
+        }
+
+        // Now 'articleSummaries' contains the summaries of the articles
+        // console.log(articleSummaries);
+        // setSummary(JSON.stringify(result.articles));
+        // let summaryToDisplay = "";
+        // for (let i = 0; i < articleSummaries.length; i++) {
+        //   summaryToDisplay += `` + articleSummaries[i] + "";
+        // }
+        // setSummary(summaryToDisplay);
+
+      }).catch(error => {
+        setSummary("ERROR SETTING NEWS");
+      }));
+      
+      
+      /*
+      const articles = response.data.articles.slice(0, 10); // Get the top 10 articles
+      for (let i = 0; i < articles.length; i++) {
+          const article = articles[i];
+          console.log(`News ${i + 1}: ${article.title}`);
+          console.log(`Source: ${article.source.name}`);
+          console.log(`Description: ${article.description}`);
+          console.log(`URL: ${article.url}`);
+          console.log('\n');
+      }
+      */
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
+  }
+
+  const [selectedOption, setSelectedOption] = useState('Business'); // Initialize with the default option
+  const handleRadioChange = (event) => {
+    setSelectedOption(event.target.value);
+    console.log(event.target.value);
+    fetchAndSummarizeNews(country, event.target.value);
+  };
 
   const handleGlobeClick = ({ lat, lng }) => {
     // Update the state with the clicked coordinates
@@ -68,6 +244,7 @@ const handleRadioChange = (event) => {
         if (data.results.length > 0) {
           const country = data.results[0].components.country;
           setCountry(country); // Store the country in state
+          fetchAndSummarizeNews(country, navigation.name);
         } else {
           console.error('Geocoding failed.');
         }
@@ -325,7 +502,7 @@ const handleRadioChange = (event) => {
                       className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
                       aria-hidden="true"
                     />
-                    Settings
+                    Reset
                   </a>
                 </li>
               </ul>
@@ -394,11 +571,15 @@ const handleRadioChange = (event) => {
         <p>Longitude: {coordinates.lng}</p>
 
         <h3>Country:</h3>
-      <p>{country}</p>
+        <p className="font-bold text-4xl">{country}</p>
 
-      <h2>Selected Option:</h2>
-        <p>{selectedOption}</p>
+        <h2>Selected Option:</h2>
+        <p className="font-semibold text-2xl">{selectedOption}</p>
+
+        <h2>Summary:</h2>
+        <p>{summary}</p>
       </div>
+      
     </div>
 
 
