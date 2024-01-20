@@ -373,14 +373,14 @@ const handleRadioChange = (event) => {
 
           <main className="py-2">
           <div className="flex justify-between">
-  <div className="w-2/3 px-4 sm:px-6 lg:px-8 py-10">
-    <div className="overflow-hidden rounded-lg bg-white shadow">
-      <div className="sm:p-6">
+  <div className="w-2/3 px-4 rounded-full sm:px-6 lg:px-8 py-10">
+    <div className="overflow-hidden rounded-full bg-white shadow">
+      <div className="sm:p-6 -pl-3">
         <Globe
           width={800}
-          height={600}
+          height={500}
           backgroundColor="white"
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-day.jpg"
           onGlobeClick={handleGlobeClick}
         />
       </div>
