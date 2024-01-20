@@ -1,3 +1,12 @@
+# Globe AI
+
+We created a web app that aggregates and displays news info from any chosen chosen country in a subject field of your choosing. The site works via interacting with a fully-functional globe, wherein the user can click any region of the Earth and see their chosen latitude and longitude, along with what country it corresponds to. 
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
