@@ -190,7 +190,7 @@ export default function MainPage() {
           query += `${articleSummaries[i]}`
           queryGPT(query).then(result =>{
             console.log(result)
-            articleSummaries[i] = result + "😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂";
+            articleSummaries[i] = result + "⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜⬜⬜⬜⬜️⬜️"//"😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂";
             summaryToDisplay += articleSummaries[i];
             setSummary(summaryToDisplay) ;
           })
@@ -564,7 +564,7 @@ export default function MainPage() {
     </div>
   </div>
   <div className="w-1/3 px-4 sm:px-6 lg:px-8 py-10">
-    <div className="overflow-hidden rounded-lg bg-gray-200 shadow">
+    <div className="overflow-hidden rounded-lg bg-[#d9d9d9] shadow">
       <div className="px-4 py-5 sm:p-6">
       <h3>Clicked Coordinates</h3>
         <p>Latitude: {coordinates.lat}</p>
