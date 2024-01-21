@@ -149,7 +149,7 @@ export default function MainPage() {
   
 
 
-  const apiKey = '3057c8a76a6649a6bd678b43b3716d20';
+  const apiKey = process.env.REACT_APP_GEO_API_KEY;
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const latitude = coordinates.lat;  // Replace with your latitude
   const longitude = coordinates.lng; // Replace with your longitude
@@ -158,7 +158,7 @@ export default function MainPage() {
   const [summary, setSummary] = useState(null);
 
   function getNewsArticleSummary(country, category) {
-    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const api_key = process.env.REACT_APP_NEWS_API_KEY;
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
   }
   async function fetchAndSummarizeNews(country, category) {
