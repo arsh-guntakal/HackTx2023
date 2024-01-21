@@ -162,7 +162,7 @@ export default function MainPage() {
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
   }
   async function fetchAndSummarizeNews(country, category) {
-    const api_key = 'fd4b5ea245b5486aa8922493bdd4603c';
+    const api_key = process.env.REACT_APP_NEWS_API_KEY;
     const possibleCategories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
     const countryCode = countryCodes[country]
     const categoryParam = category ?  `&category=${category}` : '';
