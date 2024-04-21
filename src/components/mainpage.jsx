@@ -44,7 +44,7 @@ async function queryGPT(query){
   return message
 }
 
-
+/*Debugging functions*/
 // Dummy function to simulate summarizing an article
 function summarizeArticle(text) {
 let query = "Can you summarize the key points of this article in 50 to 75 words?"
@@ -190,7 +190,7 @@ export default function MainPage() {
           query += `${articleSummaries[i]}`
           queryGPT(query).then(result =>{
             console.log(result)
-            articleSummaries[i] = result + "⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜⬜⬜⬜⬜️⬜️"//"😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂";
+            articleSummaries[i] = result + "⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜⬜⬜⬜⬜️⬜️"//"
             summaryToDisplay += articleSummaries[i];
             setSummary(summaryToDisplay) ;
           })
