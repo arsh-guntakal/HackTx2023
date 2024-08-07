@@ -19,7 +19,7 @@ We were inspired by the lack of information about world events and peoples' inab
 The web app allows you to use an interactable globe, along with relevant categories to find the most important news articles from whatever country you click on.
 
 ## How we built it
-We used React to design the frontend including using the tailwind CSS framework to generate an ideal user experience. We used the Open AI API to communicate with GPT to generate the briefing and used the News API to get the relevant news in each country and the GlobeGL API to generate an interactive globe.
+We used React to design the frontend, including the tailwind CSS framework, to generate an ideal user experience. We used the Open AI API to communicate with GPT to generate the briefing and used the News API to get the relevant news in each country and the GlobeGL API to generate an interactive globe.
 
 ## What's next for Globe AI
 We want to support more countries in our project and implement a web scraper that gets the text from the article and prompt GPT better for summarizations. We also want to develop a way for GPT to detect the sentiment of the article and have a "Good News" score as part of our briefing.
